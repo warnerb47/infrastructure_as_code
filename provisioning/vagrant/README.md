@@ -8,7 +8,7 @@ Dans un fichier **VagrantFile** on va définir nos configurations qui décrivent
 - Pour spécifier le provider par defaut virtualBox: `config.vm.provider`
 - Pour configuer votre adress ip, port etc: `config.vm.network`
 
-# Quelques commandes
+# Vagrant CLI
 - Pour générer un template: `vagrant init`
 - Pour créer nos vms: `vagrant up`
 - Pour se connecter au vm: `vagrant ssh`
