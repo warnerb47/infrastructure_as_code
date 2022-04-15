@@ -1,0 +1,9 @@
+---
+- name: Creation des utilisateurs
+  user:
+    name: "{{ item.userName }}"
+    password: "{{  item.password  | password_hash('sha512') }}"
+    shell: /bin/bash
+    state: present
+  with_items:
+    - "{{ users }}"

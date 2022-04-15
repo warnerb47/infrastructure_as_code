@@ -1,0 +1,28 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Make sure Nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+# - name: Create document root for api
+#   file:
+#     path: "{{ item }}"
+#     state: directory
+#   with_items: "{{ docRoots }}"
+
+
+# - name: Create nginx Virtual host
+#   template:
+#     src: vhost.conf.j2
+#     dest: "/etc/nginx/sites-enabled/{{ conf_file_name }}"
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted

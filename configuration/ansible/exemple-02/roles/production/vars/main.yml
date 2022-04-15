@@ -1,0 +1,30 @@
+---
+mongo_version: "5.0"
+node_version: "14"
+users:
+  - { userName: "warner", password: "test2#"}
+  - { userName: "cheikh", password: "test3#"}
+
+docRoots:
+  - "/opt/mburu/backend/dist/server"
+  - "/opt/mburu/admin/current/dist/multikart-backend"
+  - "/opt/data/mburu/files/ProductImage"
+
+nginx_config:
+  api :
+    server_name: "staging.mburu.org"
+    root: "/opt/mburu/backend/dist/server"
+    port: "1000"
+    passenger_app_env: "staging"
+  web:
+    server_name: "staging-admin.mburu.org"
+    root: "/opt/mburu/admin/current/dist/multikart-backend"
+    port: "4500"
+    passenger_app_env: "staging"
+  static:
+    server_name: "staging-files.mburu.org"
+    root: "/opt/data/mburu/files/ProductImage"
+    port: "4600"
+    passenger_app_env: "staging"
+
+conf_file_name: mburu.conf

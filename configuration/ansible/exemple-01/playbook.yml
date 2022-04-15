@@ -1,0 +1,10 @@
+---
+- name: Getting start with ansible
+  hosts: production
+  remote_user: vagrant
+
+  tasks:
+  - name: Create file foo.conf file
+    file:
+      path: /tmp/foo.conf
+      state: touch

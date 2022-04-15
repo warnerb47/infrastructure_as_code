@@ -1,0 +1,102 @@
+#*************************** Backend **************************
+server {
+   server_name {{ nginx_config.api.server_name }};
+
+    # Tell Nginx and Passenger where your app's 'public' directory is
+    root {{ nginx_config.api.root }};
+
+    # Turn on Passenger
+    passenger_enabled on;
+
+    # Tell Passenger that your app is a Node.js app
+    passenger_app_type node;
+    passenger_startup_file index.js;
+    passenger_app_root {{ nginx_config.api.root }};
+    passenger_app_env {{ nginx_config.api.passenger_app_env }};
+    try_files $uri $uri/ /index.js;
+    location / {
+        proxy_pass http://{{ ansible_all_ipv4_addresses[0] }}:{{ nginx_config.api.port }};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+}
+
+server {
+   listen {{ nginx_config.api.port }};
+   server_name {{ ansible_all_ipv4_addresses[0] }};
+   root {{ nginx_config.api.root }};
+   passenger_enabled on;
+   passenger_app_type node;
+   passenger_startup_file index.js;
+   passenger_app_root {{ nginx_config.api.root }};
+   passenger_app_env staging;
+}
+
+#*************************** Admin ***************************
+server {
+    server_name {{ nginx_config.web.server_name }};
+
+    # Tell Nginx and Passenger where your app's 'public' directory is
+    root {{ nginx_config.web.root }};
+
+    # Turn on Passenger
+    passenger_enabled on;
+    passenger_startup_file app.html;
+    try_files $uri $uri/ /index.html;
+
+   location / {
+        proxy_pass http://{{ ansible_all_ipv4_addresses[0] }}:{{ nginx_config.web.port }};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+   }
+
+}
+
+server {
+   listen {{ nginx_config.web.port }};
+   server_name {{ ansible_all_ipv4_addresses[0] }};
+
+   root {{ nginx_config.web.root }};
+    location /{
+    try_files $uri $uri/ /index.html;
+   }
+}
+
+
+#*************************** files ***************************
+server {
+   listen {{ nginx_config.static.port }};
+   server_name {{ nginx_config.static.server_name }};
+
+   root {{ nginx_config.static.root }};
+   autoindex on;
+
+}
+
+server {
+    server_name {{ nginx_config.static.server_name }};
+    root {{ nginx_config.static.root }};
+    location / {
+       proxy_pass http://127.0.0.1:{{ nginx_config.static.port }};
+       deny all;
+       location ~ "\.(JPG|jpeg|png|pdf|jpg|webp)$" {
+          allow all;   
+       }
+   }
+}
+
+server {
+   server_name {{ nginx_config.api.server_name }};
+    listen 80;
+}
+server {
+    server_name {{ nginx_config.web.server_name }};
+    listen 80;
+}

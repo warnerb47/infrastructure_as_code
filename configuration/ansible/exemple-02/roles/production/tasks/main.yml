@@ -1,0 +1,6 @@
+---
+# - include_tasks: debug.yml
+# - include_tasks: users.yml
+- include_tasks: common.yml
+- include_tasks: nginx.yml
+- include_tasks: node.yml
